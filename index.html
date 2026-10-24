@@ -3,88 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Gráfica</title>
+    <meta name="description" content="Calculadora Científica y Graficadora de Funciones 2D con análisis matemático completo de precálculo (paridad, raíces, extremos e intersecciones). Proyecto UMG.">
+    <title>Calculadora Gráfica & Científica | Precálculo UMG</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Plotly.js para renderizado interactivo 2D -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- Math.js para parseo y evaluación matemática simbólica -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.9.0/math.js"></script>
 </head>
 <body>
-    <!-- Header con logo de la UMG -->
+    <!-- Encabezado Institucional UMG -->
     <header class="umg-header">
         <div class="header-content">
             <img src="Umg.png" alt="Universidad Mariano Gálvez" class="umg-logo">
             <div class="header-text">
-                <h1>Calculadora Gráfica y Normal</h1>
-                <p class="subtitle">Proyecto de Precálculo - Segundo Semestre</p>
+                <h1>Calculadora Gráfica & Científica</h1>
+                <p class="subtitle">Laboratorio de Precálculo | Ingeniería en Sistemas — Universidad Mariano Gálvez</p>
             </div>
         </div>
     </header>
 
-    <div class="container">
-        
-        <!-- Sección de Calculadora Normal -->
-        <div class="calculator-section">
-            <h2>Calculadora Normal</h2>
-            <div class="calculator">
-                <input type="text" id="display" class="display" readonly>
-                <div class="buttons">
-                    <button class="btn clear" onclick="clearDisplay()">C</button>
-                    <button class="btn clear" onclick="clearEntry()">CE</button>
-                    <button class="btn operator" onclick="deleteLast()">⌫</button>
-                    <button class="btn operator" onclick="appendToDisplay('/')">/</button>
-                    
-                    <button class="btn number" onclick="appendToDisplay('7')">7</button>
-                    <button class="btn number" onclick="appendToDisplay('8')">8</button>
-                    <button class="btn number" onclick="appendToDisplay('9')">9</button>
-                    <button class="btn operator" onclick="appendToDisplay('*')">×</button>
-                    
-                    <button class="btn number" onclick="appendToDisplay('4')">4</button>
-                    <button class="btn number" onclick="appendToDisplay('5')">5</button>
-                    <button class="btn number" onclick="appendToDisplay('6')">6</button>
-                    <button class="btn operator" onclick="appendToDisplay('-')">-</button>
-                    
-                    <button class="btn number" onclick="appendToDisplay('1')">1</button>
-                    <button class="btn number" onclick="appendToDisplay('2')">2</button>
-                    <button class="btn number" onclick="appendToDisplay('3')">3</button>
-                    <button class="btn operator" onclick="appendToDisplay('+')">+</button>
-                    
-                    <button class="btn number zero" onclick="appendToDisplay('0')">0</button>
-                    <button class="btn number" onclick="appendToDisplay('.')">.</button>
-                    <button class="btn equals" onclick="calculate()">=</button>
+    <main class="container">
+        <!-- Dashboard Principal con 2 Columnas -->
+        <div class="dashboard-grid">
+            
+            <!-- COLUMNA IZQUIERDA: Calculadora Estándar y Científica -->
+            <section class="card calculator-section" aria-labelledby="calc-title">
+                <div class="section-header">
+                    <h2 id="calc-title">🧮 Calculadora Científica</h2>
+                    <span class="badge badge-accent">Math.js</span>
                 </div>
-                <div class="scientific-functions">
-                    <button class="btn function" onclick="appendFunction('sqrt(')">√</button>
-                    <button class="btn function" onclick="appendFunction('pow(')">x²</button>
-                    <button class="btn function" onclick="appendFunction('sin(')">sin</button>
-                    <button class="btn function" onclick="appendFunction('cos(')">cos</button>
-                    <button class="btn function" onclick="appendFunction('tan(')">tan</button>
-                    <button class="btn function" onclick="appendFunction('log(')">log</button>
-                    <button class="btn function" onclick="appendToDisplay('(')">(</button>
-                    <button class="btn function" onclick="appendToDisplay(')')">)</button>
+
+                <div class="calculator">
+                    <!-- Pantalla doble: Operación previa y resultado actual -->
+                    <div class="calculator-screen">
+                        <div id="display-prev" class="display-prev" aria-live="polite"></div>
+                        <input type="text" id="display" class="display" readonly placeholder="0" aria-label="Pantalla de la calculadora">
+                    </div>
+
+                    <!-- Barra de herramientas (Modo Grados / Radianes) -->
+                    <div class="calc-toolbar">
+                        <button id="angle-mode-btn" class="btn-mode" onclick="toggleAngleMode()" title="Cambiar modo de ángulos para funciones trigonométricas">
+                            MODO: <span id="angle-mode-label" class="mode-active">RAD</span>
+                        </button>
+                        <span class="calc-status" id="calc-status">Listo</span>
+                    </div>
+
+                    <!-- Teclado Numérico y Operaciones Básicas -->
+                    <div class="buttons-grid">
+                        <button class="btn btn-clear" onclick="clearDisplay()" title="Limpiar todo (Esc)">C</button>
+                        <button class="btn btn-clear-entry" onclick="clearEntry()" title="Borrar entrada actual">CE</button>
+                        <button class="btn btn-operator" onclick="deleteLast()" title="Borrar último carácter (Backspace)">⌫</button>
+                        <button class="btn btn-operator" onclick="appendToDisplay('/')" title="Dividir">÷</button>
+                        
+                        <button class="btn btn-number" onclick="appendToDisplay('7')">7</button>
+                        <button class="btn btn-number" onclick="appendToDisplay('8')">8</button>
+                        <button class="btn btn-number" onclick="appendToDisplay('9')">9</button>
+                        <button class="btn btn-operator" onclick="appendToDisplay('*')" title="Multiplicar">×</button>
+                        
+                        <button class="btn btn-number" onclick="appendToDisplay('4')">4</button>
+                        <button class="btn btn-number" onclick="appendToDisplay('5')">5</button>
+                        <button class="btn btn-number" onclick="appendToDisplay('6')">6</button>
+                        <button class="btn btn-operator" onclick="appendToDisplay('-')" title="Restar">-</button>
+                        
+                        <button class="btn btn-number" onclick="appendToDisplay('1')">1</button>
+                        <button class="btn btn-number" onclick="appendToDisplay('2')">2</button>
+                        <button class="btn btn-number" onclick="appendToDisplay('3')">3</button>
+                        <button class="btn btn-operator" onclick="appendToDisplay('+')" title="Sumar">+</button>
+                        
+                        <button class="btn btn-operator" onclick="toggleSign()" title="Cambiar signo (±)">±</button>
+                        <button class="btn btn-number" onclick="appendToDisplay('0')">0</button>
+                        <button class="btn btn-number" onclick="appendToDisplay('.')">.</button>
+                        <button class="btn btn-equals" onclick="calculate()" title="Calcular resultado (Enter)">=</button>
+                    </div>
+
+                    <!-- Funciones Científicas y Trigonométricas -->
+                    <div class="scientific-title">Funciones Científicas</div>
+                    <div class="scientific-grid">
+                        <button class="btn btn-function" onclick="appendFunction('sin(')" title="Seno">sin</button>
+                        <button class="btn btn-function" onclick="appendFunction('cos(')" title="Coseno">cos</button>
+                        <button class="btn btn-function" onclick="appendFunction('tan(')" title="Tangente">tan</button>
+                        <button class="btn btn-function" onclick="appendFunction('sqrt(')" title="Raíz cuadrada">√x</button>
+
+                        <button class="btn btn-function" onclick="appendFunction('pow2')" title="Elevar al cuadrado">x²</button>
+                        <button class="btn btn-function" onclick="appendToDisplay('^')" title="Potencia x^y">xʸ</button>
+                        <button class="btn btn-function" onclick="appendFunction('abs(')" title="Valor absoluto">|x|</button>
+                        <button class="btn btn-function" onclick="appendFunction('log(')" title="Logaritmo natural (ln)">ln</button>
+
+                        <button class="btn btn-function" onclick="appendFunction('log10(')" title="Logaritmo base 10">log₁₀</button>
+                        <button class="btn btn-function" onclick="appendToDisplay('pi')" title="Constante Pi (π)">π</button>
+                        <button class="btn btn-function" onclick="appendToDisplay('e')" title="Constante de Euler (e)">e</button>
+                        <button class="btn btn-function" onclick="appendFunction('inv')" title="Inverso 1/x">1/x</button>
+
+                        <button class="btn btn-function" onclick="appendToDisplay('(')" title="Abrir paréntesis">(</button>
+                        <button class="btn btn-function" onclick="appendToDisplay(')')" title="Cerrar paréntesis">)</button>
+                        <button class="btn btn-function" onclick="appendToDisplay('%')" title="Módulo">%</button>
+                        <button class="btn btn-function" onclick="useAns()" title="Último resultado calculado">Ans</button>
+                    </div>
                 </div>
-            </div>
+            </section>
+
+            <!-- COLUMNA DERECHA: Graficador 2D & Ficha de Análisis de Precálculo -->
+            <section class="card graphing-section" aria-labelledby="graph-title">
+                <div class="section-header">
+                    <h2 id="graph-title">📈 Graficador 2D & Análisis de Precálculo</h2>
+                    <span class="badge badge-primary">Motor Plotly 2D</span>
+                </div>
+
+                <!-- Presets rápidos para Precálculo -->
+                <div class="presets-container">
+                    <span class="presets-label">Ejemplos típicos:</span>
+                    <div class="presets-chips">
+                        <button type="button" class="chip" onclick="applyPreset('x^2 - 4', '')">x² - 4</button>
+                        <button type="button" class="chip" onclick="applyPreset('x^3 - 3*x', '')">x³ - 3x</button>
+                        <button type="button" class="chip" onclick="applyPreset('sin(x)', 'cos(x)')">sin(x) & cos(x)</button>
+                        <button type="button" class="chip" onclick="applyPreset('1/x', '')">1/x</button>
+                        <button type="button" class="chip" onclick="applyPreset('sqrt(x)', '')">√(x)</button>
+                        <button type="button" class="chip" onclick="applyPreset('2^x', '')">2ˣ</button>
+                        <button type="button" class="chip" onclick="applyPreset('abs(x)', '')">|x|</button>
+                        <button type="button" class="chip" onclick="applyPreset('x^2', 'x + 2')">x² & x + 2</button>
+                    </div>
+                </div>
+
+                <!-- Formulario de Funciones y Rango -->
+                <form id="graph-form" class="graph-form" onsubmit="event.preventDefault(); graficar();">
+                    <div class="inputs-grid">
+                        <div class="form-group">
+                            <label for="funcion1">
+                                <span class="fn-badge fn-1">f₁(x)</span> Función Principal
+                            </label>
+                            <input type="text" id="funcion1" placeholder="Ejemplo: x^2 - 4  ó  sin(x)" value="x^2 - 4" autocomplete="off" spellcheck="false" required>
+                            <span class="helper-text">Escribe con o sin "y =". Multiplicación implícita permitida (ej: 2x).</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="funcion2">
+                                <span class="fn-badge fn-2">f₂(x)</span> Segunda Función <small>(opcional)</small>
+                            </label>
+                            <input type="text" id="funcion2" placeholder="Ejemplo: x + 2  ó  cos(x)" autocomplete="off" spellcheck="false">
+                        </div>
+                    </div>
+
+                    <!-- Configuración de Rango y Acciones -->
+                    <div class="graph-controls">
+                        <div class="range-inputs">
+                            <label for="xmin">Rango X: [</label>
+                            <input type="number" id="xmin" value="-10" step="any" class="range-field" title="Límite inferior del eje X">
+                            <span>a</span>
+                            <input type="number" id="xmax" value="10" step="any" class="range-field" title="Límite superior del eje X">
+                            <span>]</span>
+                        </div>
+
+                        <div class="actions-buttons">
+                            <button type="submit" id="graficar" class="btn-primary">
+                                <span class="btn-icon">⚡</span> Graficar Curvas
+                            </button>
+                            <button type="button" id="btn-reset-view" class="btn-secondary" onclick="resetGraphView()">
+                                ↺ Reset Vista
+                            </button>
+                            <button type="button" id="btn-clear-graph" class="btn-outline" onclick="clearGraph()">
+                                ✕ Limpiar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Contenedor del Gráfico Plotly -->
+                <div id="grafica" class="plotly-container"></div>
+
+                <!-- Ficha de Análisis Matemático (Precálculo) -->
+                <div id="resultados" class="analysis-card">
+                    <div class="analysis-header">
+                        <h3>📋 Ficha Técnica de Análisis de Precálculo</h3>
+                        <span id="analysis-fn-label" class="badge badge-info">Evaluando f₁(x)</span>
+                    </div>
+
+                    <div class="analysis-grid">
+                        <!-- Paridad -->
+                        <div class="analysis-item">
+                            <div class="item-title">
+                                <span class="icon">⚖️</span>
+                                <strong>Paridad y Simetría:</strong>
+                            </div>
+                            <div id="paridad-content" class="item-content">
+                                <p id="paridad" class="result-text">Grafica una función para analizar su paridad.</p>
+                            </div>
+                        </div>
+
+                        <!-- Intersección con Eje Y -->
+                        <div class="analysis-item">
+                            <div class="item-title">
+                                <span class="icon">📍</span>
+                                <strong>Corte con Eje Y (x = 0):</strong>
+                            </div>
+                            <div id="intercept-y-content" class="item-content">
+                                <p id="intercepto-y" class="result-text">Pendiente de evaluación.</p>
+                            </div>
+                        </div>
+
+                        <!-- Intersección con Eje X (Raíces reales) -->
+                        <div class="analysis-item span-full">
+                            <div class="item-title">
+                                <span class="icon">🎯</span>
+                                <strong>Cortes con Eje X (Raíces / Ceros Reales):</strong>
+                            </div>
+                            <div id="roots-content" class="item-content">
+                                <p id="intersecciones-x" class="result-text">Pendiente de evaluación.</p>
+                            </div>
+                        </div>
+
+                        <!-- Extremos locales -->
+                        <div class="analysis-item">
+                            <div class="item-title">
+                                <span class="icon">⛰️</span>
+                                <strong>Extremos Locales Aproximados:</strong>
+                            </div>
+                            <div id="extrema-content" class="item-content">
+                                <p id="extremos-locales" class="result-text">Pendiente de evaluación.</p>
+                            </div>
+                        </div>
+
+                        <!-- Puntos de Intersección entre ambas curvas -->
+                        <div class="analysis-item" id="item-interseccion-f1f2">
+                            <div class="item-title">
+                                <span class="icon">🔗</span>
+                                <strong>Intersección f₁(x) ∩ f₂(x):</strong>
+                            </div>
+                            <div id="interseccion-curves-content" class="item-content">
+                                <p id="interseccion-curvas" class="result-text">No se ha especificado f₂(x).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
+    </main>
 
-        <!-- Sección de Calculadora Gráfica -->
-        <div class="graphing-section">
-            <h2>Calculadora Gráfica</h2>
-            <div class="form-container">
-                <label for="funcion1">Función 1:</label>
-                <input type="text" id="funcion1" placeholder="Ejemplo: y = x^2">
+    <footer class="umg-footer">
+        <p>Calculadora Gráfica & Científica — Ingeniería en Sistemas, Universidad Mariano Gálvez de Guatemala.</p>
+        <p><small>Desarrollado con Plotly.js y Math.js | Optimizado para Precálculo y Cálculo Diferencial</small></p>
+    </footer>
 
-                <label for="funcion2">Función 2 (opcional):</label>
-                <input type="text" id="funcion2" placeholder="Ejemplo: x^2 + y^2 = 4">
-
-                <button id="graficar">Graficar</button>
-            </div>
-            <div id="grafica"></div>
-            <div id="resultados">
-                <h2>Resultados:</h2>
-                <p id="paridad"></p>
-                <p id="intersecciones"></p>
-            </div>
-        </div>
-    </div>
     <script src="app.js"></script>
 </body>
 </html>
